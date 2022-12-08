@@ -152,7 +152,12 @@ function articleChoice(arg){
     pDelete.classList.add("deleteItem");
     pDelete.textContent = "Supprimer";
     // Ecoute de la quantité, argument donné : " product " , nouvelle quantité   
-    inputQ.addEventListener("input", () => updateQty(arg, parseInt(inputQ.value)));
+    inputQ.addEventListener("input", () => {
+        console.log("click");
+        updateQty(arg, parseInt(inputQ.value))
+    }
+      );
+
     }
 
     //**************  Fonction qui met à jour la quantité dans LS et boite *******************/
@@ -163,7 +168,13 @@ function articleChoice(arg){
         const colorProd = articlePrice.color;
         articlePrice.qty = newValue;   
         if (articlePrice.qty > 0 && articlePrice.qty <= 100 ){
-            for (i in cart){
+            let product = cart.find(p=>(p.Id === idProd  && p.Color === colorProd));
+            console.log("test de update");
+            console.log(product);
+            if (product)
+                product.Quantity = parseInt(articlePrice.qty);
+                saveArray(cart);
+            /*for (i in cart){
                 if (cart[i].Id === idProd && cart[i].Color === colorProd){
                     cart[i].Quantity = articlePrice.Qty;                                      
                     saveArray(cart);
@@ -171,7 +182,7 @@ function articleChoice(arg){
                         allArticlePrice[i].qty = articlePrice.qty;
                     }
                 }
-            }
+            }*/
             PrintTotal(); // recalcule le total
         }else{
             alert("La quantité choisie n'est pas valide");
@@ -300,7 +311,7 @@ function liveCheckInputs() {
         })
     }
 }
-/*
+
 // Verification + Requete POST à l'api (Soucis restant : Verification non complet ou décalé)
 function sendPost() {
     order.addEventListener("click", (event) => {
@@ -349,4 +360,4 @@ function sendPost() {
             alert("Veuillez remplir les champs correctements.");
         }
     })
-}*/
+}
