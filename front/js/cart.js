@@ -30,7 +30,6 @@ function testLs(){
     console.log(cart);
     if (cart.length > 0) {
         checkLs();            
-        console.log("jhfjgf");
         
     }
     else{
@@ -43,7 +42,7 @@ function testLs(){
 testLs();
 function checkLs() {
     //cart = getCart();
-    console.log("ggdtyy");
+    
     console.log(cart);
     for (let product of cart){
         
@@ -55,12 +54,13 @@ function checkLs() {
             })
             .then(function(b){
                 console.log(b);
-                const newProduct = new articlePrice(b._id,b.price,product.Color,b.imageUrl,b.altTxt,b.description,product.qty, product.total);
+                const newProduct = new articlePrice(b._id,b.price,product.Color,b.imageUrl,b.altTxt,b.description,product.Quantity);
                 console.log(newProduct);
                 
                 console.log(product);
                 allArticlePrice.push(newProduct);
                 articleChoice(newProduct);
+                PrintTotal();
                 delectProduct();
             })
             .catch(function(err){
@@ -165,7 +165,7 @@ function articleChoice(arg){
         if (articlePrice.qty > 0 && articlePrice.qty <= 100 ){
             for (i in cart){
                 if (cart[i].Id === idProd && cart[i].Color === colorProd){
-                    cart[i].Quantity = articlePrice.Qantity;
+                    cart[i].Quantity = articlePrice.Qty;                                      
                     saveArray(cart);
                     if (allArticlePrice[i].id === idProd && allArticlePrice[i].color === colorProd){
                         allArticlePrice[i].qty = articlePrice.qty;
@@ -177,7 +177,7 @@ function articleChoice(arg){
             alert("La quantité choisie n'est pas valide");
             for (i in cart){
                 if (cart[i].Id === idProd && cart[i].Color === colorProd){
-                    cart[i].qty = 1;
+                    cart[i].Quantity = 1;
                     saveArray(cart);
                     if (allArticlePrice[i].id === idProd && allArticlePrice[i].color === colorProd){
                         allArticlePrice[i].qty = 1;
@@ -205,7 +205,7 @@ function PrintTotal(){
     totalP.textContent = totalPrice;
     totalQ.textContent = totalQuantity;
 }
-console.log(arraySelection);                                           
+                                       
 
 //supprimer
 function delectProduct(){
@@ -216,19 +216,20 @@ function delectProduct(){
             const articleId= delectAticle.dataset.id;
             const articleColor= delectAticle.dataset.color;
             delectAticle.remove();
-
-        } )
-        for(i in cart){
-            if (cart[i].Id == articleId && cart[i].Color == articleColor){
-                a=1;
-                cart.splice(a,1);
-                saveArray(cart);
-                arraySelection.splice(a,1);
-
-
+            PrintTotal();
+            for(i in cart){
+                if (cart[i].Id == articleId && cart[i].Color == articleColor){
+                    let a=i;
+                    cart.splice(a,1);
+                    saveArray(cart);
+                    allArticlePrice.splice(a,1);
+                    
+    
+                }
             }
-        }
-
+    
+        } )
+      
     });
     
 
@@ -299,7 +300,7 @@ function liveCheckInputs() {
         })
     }
 }
-
+/*
 // Verification + Requete POST à l'api (Soucis restant : Verification non complet ou décalé)
 function sendPost() {
     order.addEventListener("click", (event) => {
@@ -348,4 +349,4 @@ function sendPost() {
             alert("Veuillez remplir les champs correctements.");
         }
     })
-}
+}*/
