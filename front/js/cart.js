@@ -45,7 +45,7 @@ function checkLs() {
     
     console.log(cart);
     for (let product of cart){
-        
+       
         fetch (KanapAPI+product.Id)
             .then(function(res){
                 if(res.ok){
@@ -186,6 +186,7 @@ function articleChoice(arg){
             PrintTotal(); // recalcule le total
         }else{
             alert("La quantité choisie n'est pas valide");
+            //find a la place du for
             for (i in cart){
                 if (cart[i].Id === idProd && cart[i].Color === colorProd){
                     cart[i].Quantity = 1;
@@ -245,119 +246,157 @@ function delectProduct(){
     
 
 }
-//formulaire
-//Déclaration de l'objet contact et regex 
 
-// Regex pour verification des champs inputs
-const allRegex = [
-    {
-        name: "firstName",
-        regex: /^[A-Za-zÀ-ü-' ]+$/,
-        error: "firstNameErrorMsg",
-        validate: "Prénom ✓"
-    },
-    {
-        name: "lastName",
-        regex: /^[A-Za-zÀ-ü-' ]+$/,
-        error: "lastNameErrorMsg",
-        validate: "Nom ✓"
-    },
-    {
-        name: "address",
-        regex: /^[0-9]+\s[A-Za-zÀ-ü-'\s]+/,
-        error: "addressErrorMsg",
-        validate: "Adresse ✓"
-    },
-    {
-        name: "city",
-        regex: /^[A-Za-zÀ-ü-' ]+$/,
-        error:  "cityErrorMsg",
-        validate: "Ville ✓"
-    },
-    {
-        name: "email",
-        regex: /.+\@.+\..+/,
-        error: "emailErrorMsg",
-        validate: "email ✓"
-    }
-];
+//****************  FORMULAIRE *************************  
+ //Déclaration de l'objet contact  */
+let contact = {
+    firstName : "",
+    lastName : "",
+    address : "",
+    city : "",
+    email : ""
+};
 
-function testInput(input, regex) {
-    let test = regex.test(input.value);
-    if (test) {
-        return true;
+let validBox = false;
+
+// regex 
+let regexName = /^[a-zA-ZÂÀÈÉËÏÎéèëêïî'\s-][a-zA-ZÂÀÈÉËÏÎéèëêïîôç'\s-]{2,60}$/;
+let regexAddress = /^[a-zA-ZÂÀÈÉËÏÎéèëêïî0-9][0-9a-zA-Zàéèëêïîôç'\s-]{5,100}$/;
+let regexCity = /^[a-zA-ZÂÀÈÉËÏÎéèëêïî][a-zA-Zàéèëêïîôç'\s-]{2,100}$/;
+let regexEmail = /^[a-zA-Z0-9._-]+[@]{1}[a-zA-Z0-9._-]+[.]{1}[a-z]{2,10}$/;
+
+validateField("firstName", "firstNameErrorMsg", regexName, " du prénom "); 
+validateField("lastName", "lastNameErrorMsg", regexName, " du nom ");
+validateField("address", "addressErrorMsg", regexAddress, " de l'adresse ");
+validateField("city", "cityErrorMsg", regexCity, " de la ville ");
+validateField("email", "emailErrorMsg", regexEmail, " de l'email ");
+
+// Fonction -> récupére les éléments du DOM / écoute l'évenement / appel les fonction suivante
+function validateField(id, errorMsgId, regexString, messageError) {
+    const element = document.getElementById(id);
+    const errorElement = document.getElementById(errorMsgId);
+    
+    element.addEventListener("change", function () {
+        validationForm(this, regexString, errorElement, messageError);
+        if (validBox === false){
+            setContactValue(id, "")
+        }else{
+            setContactValue(id, this.value)      
+        }
+    });
+
+}
+
+// Fonction de validation de la saisie du formulaire / affiche un message d'erreur personnalisé
+function validationForm(currentComponent, regex, componentError, errorMsg) {
+    let Regex = regex;  
+    if (!Regex.test(currentComponent.value)) {
+      const ErrorMsg = componentError;
+      ErrorMsg.textContent = "La saisie" + errorMsg + "n'est pas valide";
+      validBox = false;
+      return validBox;
+    } else {
+      const ErrorMsg = componentError;
+      ErrorMsg.textContent = "";
+      validBox = true;
+      return validBox;
     }
-    else {
-        return false;
+}
+// Fonction -> permet d'attribuer la bonne valeur à l'objet Contact
+function setContactValue(field, value) {
+    if (field === "firstName"){
+        contact.firstName = value;
+    }
+    if (field === "lastName"){
+        contact.lastName = value;
+    }
+    if (field === "address"){
+        contact.address = value;
+    }
+    if (field === "city"){
+        contact.city = value;
+    }
+    if (field === "email"){
+        contact.email = value;
     }
 }
 
-// Verification direct des champs avec message (Soucis restant : ordre d'affichage)
-function liveCheckInputs() {
-    for(infos of allRegex) {
-        let infosContent = infos;
-        let input = document.getElementById(infosContent.name);
-        let error = input.nextElementSibling;
-        input.addEventListener("change", () => {
-            let regex = infosContent.regex;
-            let returnTest = testInput(input,regex);
-            if(returnTest){
-                error.innerText = infosContent.validate;
+// Déclaration du tableau comprenant les ID produits
+let products = [];
+function ArrayID(){ 
+    for (i in cart){
+        if (cart[i].Id){
+            products.push(cart[i].Id)
+        }
+    }
+}
+ArrayID();
 
-            }
-            else {
-                error.innerText = infosContent.error;
-            }  
-        })
+// test si l'object contact est rempli ou pas  avec un compteur (y)
+function testcontact(){
+    let z = Object.values(contact);
+    let y = 0;    
+    for (i in z){
+        if(z[i] === null || z[i] === undefined || z[i] === ''){
+            y = -1;// bloque tout             
+        }else{
+            y +=1
+        }
+    }   
+    if ( y === 5){ // valide et appel la fonction d'envoi des données à l'API
+        send();
+    }else{
+        alert("Il manque des informations dans le formulaire. Veillez à remplir tous les champs");
     }
 }
 
-// Verification + Requete POST à l'api (Soucis restant : Verification non complet ou décalé)
-function sendPost() {
-    order.addEventListener("click", (event) => {
-        event.preventDefault();
-        let next = true;
-        for(infos of allRegex){
-            let infosContent = infos;
-            let input = document.getElementById(infosContent.name);
-            let regex = infosContent.regex;
-            let test = testInput(input,regex);
-            let error = input.nextElementSibling;
-            if(test){
-                next = true;
-            }
-            else {
-                next = false;
-                error.innerText = infosContent.error;
-                break;
-                
-            }
-        }
-        if (next){
-            fetch("http://localhost:3000/api/products/order", {
-                method: 'POST',
-                body: JSON.stringify(
-                    {contact: {
-                        firstName: document.getElementById("firstName").value,
-                        lastName: document.getElementById("lastName").value,
-                        address: document.getElementById("address").value,
-                        city: document.getElementById("city").value,
-                        email: document.getElementById("email").value
-                    },
-                    products: cartList.map(product => product._id)
-                    }),
-                headers : {
-                    'Content-Type': 'application/json'
-                },
-            })
-                .then(res => res.json())
-                .then(back => {
-                    localStorage.clear('cart');
-                    document.location = `./confirmation.html?id=${back.orderId}`;
-                });
-        }
-        else{
-            alert("Veuillez remplir les champs correctements.");
-        }
+/* Récupération noeud du DOM 
+    Ecoute du bouton " commander "
+    vérifie la présence d'un produit au minimum dans le LS
+    informe l'utilisateur si le panier est vide
+*/
+const commande = document.getElementById("order");
+commande.addEventListener('click', function(e){
+    e.preventDefault();
+    if (cart && cart.length != 0){
+        testcontact();
+    }else{
+        alert('Votre panier est vide, veuillez choisir au moins un produit');
+    }
+});
+
+/* Fonction d'envoi des données
+    fetch avec le verbe post => envoi de données
+    information utilisateur : propose une redirection sur la page confirmation     
+*/
+function send() {
+    fetch("http://localhost:3000/api/products/order", {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json', 
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({products,contact})
     })
+    .then(function(res) {
+      if (res.ok) {
+        return res.json();
+      }
+    })
+    .then(function(value) {
+      let x = value.orderId;
+      if (confirm('Vous allez être rediriger sur la page de confirmation')){
+        setTimeout(() => {
+            console.log('redirection ok');
+            window.location.href = `confirmation.html?id=${x}`;
+            localStorage.clear();
+          }, 1000)
+      }else{
+        console.log('stay here')
+      }
+    })
+    .catch(function(err) {
+        console.log("Une erreur est survenue dans l'envoi de la commande!!");
+        console.log(err);
+    });
 }

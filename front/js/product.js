@@ -49,6 +49,8 @@ let objectCart = {
     
 };
 console.log(objectCart);
+
+
 // **********************************************
 //          Local Storage
 // ***********************************************/
@@ -57,7 +59,8 @@ console.log(objectCart);
     // 3- inserer dans l'objet
     // 4- pousser le tableau dans le localstorage
 
-//1//
+//
+
 const eventColors = document.getElementById("colors");
 eventColors.addEventListener('change', function(){
     return objectCart.Color = eventColors.value;    
@@ -80,12 +83,14 @@ function displayLs(){
     console.log (cartQuantity);
     console.log (cartColor);
     if (isNaN(cartQuantity) 
-        || cartQuantity<1 || cartQuantity>=101 || cartQuantity===null || cartQuantity===undefined) {
-        console.log("erreur"); valid=false;
+        || cartQuantity < 1 || cartQuantity >= 101 || cartQuantity === null || cartQuantity === undefined) {
+            console.log("erreur"); valid=false;
+           
     }
         else{ 
-            if (cartColor === 0 || cartColor ==="" || cartColor === undefined) { 
-            console.log('erreur' + err );valid=false;
+            if (cartColor === 0 || cartColor ==="color"|| cartColor === "" || cartColor === undefined) { 
+                alert("Erreur sur la couleur et/ ou la quantité")
+                return false;
             } 
                 if (cartColor==="Color" && cartQuantity===0) {
                     console.log("faux");
@@ -104,17 +109,16 @@ function displayLs(){
          alert("erreur");
          }
     if(valid){
-        alert ("les select sont valides")
+        alert ("Vous venez d'ajouter le produit dans votre panier")
         return valid;
     }
     else {
-        alert("les select ne sont pas valide")
-        return valid;
+        alert("Erreur sur la couleur et/ ou la quantité")
+        return false;
     }
 };
 //fonction sauvegarde du local storage
 function saveArray(arraySelection){  
-    console.log(arraySelection);
     return localStorage.setItem('arraySelection',JSON.stringify(arraySelection));
 };
 
@@ -144,29 +148,21 @@ eventCart.addEventListener('click', function(){
 
 function basket(){
     let verif = false;
+   
     console.log(urlId);
     arraySelection = getArray();
     let a = objectCart;
     let product = arraySelection.find(p=>(p.Id === a.Id && p.Color === a.Color));
-   /* arraySelection.forEach(element => {
-        if (element.Id === a.Id && element.Color === a.Color){
-            element.Quantity += a.Quantity;
-            verif = true ;
-            //arraySelection.push(a);
-            console.log(arraySelection);
-           // return cartQuantity;
-        }
-        else {
-            verif = false;
-            
-        } 
-    });*/
-    console.log("test de update");
     console.log(product);
     if (product){
         product.Quantity += parseInt(a.Quantity);
-        saveArray(arraySelection);
+        saveArray(arraySelection); verif=false;
     }
+    
+    /*if(product.Quantity >100 || a.Quantity >100){
+        verif=true;
+        alert("la quantité n'est pas bonne");
+    }*/
     else {
         arraySelection.push(a);
         saveArray(arraySelection);
@@ -175,7 +171,4 @@ function basket(){
     }
     
 };
-//valider 100produit +100produit = 200produit probleme
-//quand on revient pour rajouter une couleur deja select ca créer en nouvel objet
-
 
