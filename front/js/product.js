@@ -145,10 +145,16 @@ eventCart.addEventListener('click', function(){
     }
 
 });
-
+/*  3- inserer l'objet dans le tableau => LS
+   Fonction qui vérifie la présence d'un produit dans le LS 
+   Si l'id et la couleur d'un même produit sont présent : modifier la quantité 
+   Sinon créer un nouveau produit 
+   La variable stopQuantity permet de bloquer l'envoi du produit 
+   si la quantité total de celui-ci est supérieur à 100
+*/
 function basket(){
     let verif = false;
-   
+    let stopQuantity = true;
     console.log(urlId);
     arraySelection = getArray();
     let a = objectCart;
@@ -157,12 +163,14 @@ function basket(){
     if (product){
         product.Quantity += parseInt(a.Quantity);
         saveArray(arraySelection); verif=false;
+        if (product.Quantity< 101) {
+            verif = true;
+        }else {
+            stopQuantity = false;
+            console.log('attention quantité suppérieur à 100');
+            alert("attention la quantité totale ne doit pas dépasser 100 pour le même produit")
+        }
     }
-    
-    /*if(product.Quantity >100 || a.Quantity >100){
-        verif=true;
-        alert("la quantité n'est pas bonne");
-    }*/
     else {
         arraySelection.push(a);
         saveArray(arraySelection);
@@ -172,3 +180,11 @@ function basket(){
     
 };
 
+if(stopQuantity) {
+        if (verif){        
+            saveArray(arraySelection); 
+        }else{     
+            arraySelection.push(objectCart);  
+            saveArray(arraySelection); 
+        }
+};      
