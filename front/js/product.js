@@ -157,34 +157,36 @@ function basket(){
     let stopQuantity = true;
     console.log(urlId);
     arraySelection = getArray();
-    let a = objectCart;
-    let product = arraySelection.find(p=>(p.Id === a.Id && p.Color === a.Color));
+    let product = arraySelection.find(p=>(p.Id === objectCart.Id && p.Color === objectCart.Color));
     console.log(product);
     if (product){
-        product.Quantity += parseInt(a.Quantity);
-        saveArray(arraySelection); verif=false;
+        product.Quantity += parseInt(objectCart.Quantity);
+      //  saveArray(arraySelection); verif=false;
         if (product.Quantity< 101) {
             verif = true;
         }else {
             stopQuantity = false;
             console.log('attention quantité suppérieur à 100');
-            alert("attention la quantité totale ne doit pas dépasser 100 pour le même produit")
+            alert("attention la quantité totale ne doit pas dépasser 100 pour le même produit");
         }
     }
-    else {
+    /*else {
         arraySelection.push(a);
         saveArray(arraySelection);
         console.log(arraySelection);
         
-    }
+    }*/
     
-};
+
 
 if(stopQuantity) {
         if (verif){        
             saveArray(arraySelection); 
+            alert("attention la quantité totale ne doit pas dépasser 100 pour le même produit");
         }else{     
             arraySelection.push(objectCart);  
             saveArray(arraySelection); 
+            
         }
 };      
+};

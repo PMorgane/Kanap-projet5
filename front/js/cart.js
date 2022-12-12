@@ -386,11 +386,11 @@ function send() {
     .then(function(value) {
       let x = value.orderId;
       if (confirm('Vous allez être rediriger sur la page de confirmation')){
-        setTimeout(() => {
+       
             console.log('redirection ok');
             window.location.href = `confirmation.html?id=${x}`;
             localStorage.clear();
-          }, 1000)
+      
       }else{
         console.log('stay here')
       }
