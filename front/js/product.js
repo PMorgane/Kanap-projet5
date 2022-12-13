@@ -27,6 +27,8 @@ fetch(callProduit)
         productIMG.appendChild(insertIMG);
         title.innerText = product.name;
         price.innerText = product.price;
+        //document.querySelector('name')
+         //document.querySelector('price')
         description.innerText = product.description;
         //quantity
         document.getElementById("quantity").value = 0;
