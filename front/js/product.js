@@ -5,7 +5,7 @@ const KanapAPI = "http://localhost:3000/api/products/";
 
 let getID = window.location.search;
 let params = new URLSearchParams(document.location.search);
-let urlId = params.get("id"); 
+let urlId = params.get("id");
 
 console.log(urlId);
 
@@ -13,13 +13,14 @@ const productIMG = document.querySelector('.item__img');
 
 
 
-const selectPanier= document.querySelector("#addToCart");
+const selectPanier = document.querySelector("#addToCart");
 //recuperer les informations du produit
-let callProduit= KanapAPI + urlId;
+let callProduit = KanapAPI + urlId;
+//function callProduct
 fetch(callProduit)
     .then((res) => res.json())
-    .then ((product) => {
-        document.querySelector('title').textContent = product.name;
+    .then((product) => {
+        document.querySelector('#title').textContent = product.name;
         const insertIMG = document.createElement("img");
         insertIMG.setAttribute("src", product.imageUrl)
         insertIMG.setAttribute("alt", product.altTxt)
@@ -27,17 +28,20 @@ fetch(callProduit)
         title.innerText = product.name;
         price.innerText = product.price;
         description.innerText = product.description;
+        //quantity
+        document.getElementById("quantity").value = 0;
         //choisir les couleurs
         for (let addColor of product.colors) {
             const newColor = document.createElement("option");
             newColor.setAttribute("value", `${addColor}`);
             newColor.innerText = addColor;
             colors.appendChild(newColor);
-   
-   
-        }})
 
-;
+
+        }
+    })
+
+    ;
 
 //creer l'objet
 
@@ -46,7 +50,7 @@ let objectCart = {
     Id: urlId,
     Quantity: 0,
     Color: 'color'
-    
+
 };
 console.log(objectCart);
 
@@ -54,62 +58,62 @@ console.log(objectCart);
 // **********************************************
 //          Local Storage
 // ***********************************************/
-    // 1-déclarer les couleurs et quantites
-    // 2- verifier les selections
-    // 3- inserer dans l'objet
-    // 4- pousser le tableau dans le localstorage
+// 1-déclarer les couleurs et quantites
+// 2- verifier les selections
+// 3- inserer dans l'objet
+// 4- pousser le tableau dans le localstorage
 
 //
 
 const eventColors = document.getElementById("colors");
-eventColors.addEventListener('change', function(){
-    return objectCart.Color = eventColors.value;    
+eventColors.addEventListener('change', function () {
+    return objectCart.Color = eventColors.value;
 });
 const eventQuantity = document.getElementById("quantity");
-eventQuantity.addEventListener('input', function(){
+eventQuantity.addEventListener('input', function () {
     eventQuantity.value = parseInt(eventQuantity.value);
-   let number = parseInt(eventQuantity.value);
-    return objectCart.Quantity = number;    
+    let number = parseInt(eventQuantity.value);
+    return objectCart.Quantity = number;
 });
 
 
 //2 fonction de validation
 
-function displayLs(){
+function displayLs() {
     let arraySelection = objectCart;
-    let valid = true ;
+    let valid = true;
     let cartQuantity = objectCart.Quantity;
     let cartColor = objectCart.Color;
-    console.log (cartQuantity);
-    console.log (cartColor);
-    if (isNaN(cartQuantity) 
+    console.log(cartQuantity);
+    console.log(cartColor);
+    if (isNaN(cartQuantity)
         || cartQuantity < 1 || cartQuantity >= 101 || cartQuantity === null || cartQuantity === undefined) {
-            console.log("erreur"); valid=false;
-           
+        console.log("erreur"); valid = false;
+
     }
-        else{ 
-            if (cartColor === 0 || cartColor ==="color"|| cartColor === "" || cartColor === undefined) { 
-                alert("Erreur sur la couleur et/ ou la quantité")
-                return false;
-            } 
-                if (cartColor==="Color" && cartQuantity===0) {
-                    console.log("faux");
-                    valid=false;
-
-                }
-
-            else  {
-            valid=true;
-            console.log(arraySelection);
-            }
+    else {
+        if (cartColor === 0 || cartColor === "color" || cartColor === "" || cartColor === undefined) {
+            alert("Erreur sur la couleur et/ ou la quantité")
+            return false;
         }
-        //nombre entier obligatoire
-    if (!Number.isInteger(cartQuantity)){
-         valid=false;
-         alert("erreur");
-         }
-    if(valid){
-        alert ("Vous venez d'ajouter le produit dans votre panier")
+        if (cartColor === "Color" && cartQuantity === 0) {
+            console.log("faux");
+            valid = false;
+
+        }
+
+        else {
+            valid = true;
+            console.log(arraySelection);
+        }
+    }
+    //nombre entier obligatoire
+    if (!Number.isInteger(cartQuantity)) {
+        valid = false;
+        alert("erreur");
+    }
+    if (valid) {
+        alert("Vous venez d'ajouter le produit dans votre panier")
         return valid;
     }
     else {
@@ -118,30 +122,30 @@ function displayLs(){
     }
 };
 //fonction sauvegarde du local storage
-function saveArray(arraySelection){  
-    return localStorage.setItem('arraySelection',JSON.stringify(arraySelection));
+function saveArray(arraySelection) {
+    return localStorage.setItem('arraySelection', JSON.stringify(arraySelection));
 };
 
 // fonction Recuperer le local storage
-function getArray(){
+function getArray() {
     let get = localStorage.getItem('arraySelection');
-    if (get == null){
+    if (get == null) {
         return [];
     }
     else {
         return JSON.parse(get);
     }
-    
+
 };
 
 //ecoute du boutton 
 const eventCart = document.getElementById("addToCart");
-eventCart.addEventListener('click', function(){
+eventCart.addEventListener('click', function () {
     let btn = objectCart;
-    
+
     //recuperer le tableau dans le local storage
-    if (displayLs(btn)){
-        basket(); 
+    if (displayLs(btn)) {
+        basket();
     }
 
 });
@@ -152,41 +156,34 @@ eventCart.addEventListener('click', function(){
    La variable stopQuantity permet de bloquer l'envoi du produit 
    si la quantité total de celui-ci est supérieur à 100
 */
-function basket(){
+function basket() {
     let verif = false;
     let stopQuantity = true;
     console.log(urlId);
     arraySelection = getArray();
-    let product = arraySelection.find(p=>(p.Id === objectCart.Id && p.Color === objectCart.Color));
+    let product = arraySelection.find(p => (p.Id === objectCart.Id && p.Color === objectCart.Color));
     console.log(product);
-    if (product){
+    if (product) {
         product.Quantity += parseInt(objectCart.Quantity);
-      //  saveArray(arraySelection); verif=false;
-        if (product.Quantity< 101) {
+        if (product.Quantity < 101) {
             verif = true;
-        }else {
+        } else {
             stopQuantity = false;
             console.log('attention quantité suppérieur à 100');
             alert("attention la quantité totale ne doit pas dépasser 100 pour le même produit");
         }
     }
-    /*else {
-        arraySelection.push(a);
-        saveArray(arraySelection);
-        console.log(arraySelection);
-        
-    }*/
-    
 
 
-if(stopQuantity) {
-        if (verif){        
-            saveArray(arraySelection); 
-            alert("attention la quantité totale ne doit pas dépasser 100 pour le même produit");
-        }else{     
-            arraySelection.push(objectCart);  
-            saveArray(arraySelection); 
-            
+
+    if (stopQuantity) {
+        if (verif) {
+            saveArray(arraySelection);
+            //alert("attention la quantité totale ne doit pas dépasser 100 pour le même produit");
+        } else {
+            arraySelection.push(objectCart);
+            saveArray(arraySelection);
+
         }
-};      
+    };
 };
