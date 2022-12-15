@@ -11,39 +11,42 @@ console.log(urlId);
 
 const productIMG = document.querySelector('.item__img');
 
-
+const title = document.querySelector('#title');
+const price = document.querySelector('#price');
+const description = document.querySelector('#description');
+const colors = document.querySelector('#colors');
 
 const selectPanier = document.querySelector("#addToCart");
 //recuperer les informations du produit
 let callProduit = KanapAPI + urlId;
-//function callProduct
-fetch(callProduit)
-    .then((res) => res.json())
-    .then((product) => {
-        document.querySelector('#title').textContent = product.name;
-        const insertIMG = document.createElement("img");
-        insertIMG.setAttribute("src", product.imageUrl)
-        insertIMG.setAttribute("alt", product.altTxt)
-        productIMG.appendChild(insertIMG);
-        title.innerText = product.name;
-        price.innerText = product.price;
-        //document.querySelector('name')
-         //document.querySelector('price')
-        description.innerText = product.description;
-        //quantity
-        document.getElementById("quantity").value = 0;
-        //choisir les couleurs
-        for (let addColor of product.colors) {
-            const newColor = document.createElement("option");
-            newColor.setAttribute("value", `${addColor}`);
-            newColor.innerText = addColor;
-            colors.appendChild(newColor);
 
 
-        }
-    })
+function callProduct() {
+    fetch(callProduit)
+        .then((res) => res.json())
+        .then((product) => {
 
-    ;
+            const insertIMG = document.createElement("img");
+            insertIMG.setAttribute("src", product.imageUrl);
+            insertIMG.setAttribute("alt", product.altTxt);
+            productIMG.appendChild(insertIMG);
+            title.innerText = product.name;
+            price.innerText = product.price;
+            description.innerText = product.description;
+            document.getElementById("quantity").value = 0;
+            //choisir les couleurs
+            for (let addColor of product.colors) {
+                const newColor = document.createElement("option");
+                newColor.setAttribute("value", `${addColor}`);
+                newColor.innerText = addColor;
+                colors.appendChild(newColor);
+
+
+            }
+        })
+
+};
+callProduct();
 
 //creer l'objet
 
@@ -57,16 +60,13 @@ let objectCart = {
 console.log(objectCart);
 
 
+
+
 // **********************************************
 //          Local Storage
 // ***********************************************/
+
 // 1-déclarer les couleurs et quantites
-// 2- verifier les selections
-// 3- inserer dans l'objet
-// 4- pousser le tableau dans le localstorage
-
-//
-
 const eventColors = document.getElementById("colors");
 eventColors.addEventListener('change', function () {
     return objectCart.Color = eventColors.value;
@@ -79,9 +79,9 @@ eventQuantity.addEventListener('input', function () {
 });
 
 
-//2 fonction de validation
 
-function displayLs() {
+// 2- verifier les selections
+function checkLs() {
     let arraySelection = objectCart;
     let valid = true;
     let cartQuantity = objectCart.Quantity;
@@ -146,7 +146,7 @@ eventCart.addEventListener('click', function () {
     let btn = objectCart;
 
     //recuperer le tableau dans le local storage
-    if (displayLs(btn)) {
+    if (checkLs(btn)) {
         basket();
     }
 

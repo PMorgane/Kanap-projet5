@@ -6,11 +6,12 @@ let cart = getCart();
 let addArticle = document.querySelector('#cart__items');
 let totalQty = document.querySelector('#totalQuantity');
 let totalPrice = document.querySelector('#totalPrice');
-const order = document.getElementById("order");
 
 
+//objet vide
 let allArticlePrice = [];
 
+//constructor
 class articlePrice {
     constructor(id, price, color, urlImg, altImg, description, qty, total) {
         this.id = id;
@@ -23,6 +24,7 @@ class articlePrice {
         this.total = total;
     }
 };
+//fonction testLs
 function testLs() {
     cart = getCart();
     console.log(cart);
@@ -169,16 +171,16 @@ function updateQty(arg, newValue) {
         PrintTotal(); // recalcule le total
     } else {
         alert("La quantité choisie n'est pas valide");
-        //find a la place du for
+
         let product = cart.find(p => (p.Id === idProd && p.Color === colorProd));
-       
-            if (product) {
-                cart[i].Quantity = 1;
-                saveArray(cart);
-                if (allArticlePrice[i].id === idProd && allArticlePrice[i].color === colorProd) {
-                    allArticlePrice[i].qty = 1;
-                }
-            
+
+        if (product) {
+            cart[i].Quantity = 1;
+            saveArray(cart);
+            if (allArticlePrice[i].id === idProd && allArticlePrice[i].color === colorProd) {
+                allArticlePrice[i].qty = 1;
+            }
+
         }
         PrintTotal();  // recalcule le total
     };

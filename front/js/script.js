@@ -24,5 +24,5 @@ function Api() {
             console.log("Une erreur est survenue !!");
         })
 
-} 
+}
 Api();
