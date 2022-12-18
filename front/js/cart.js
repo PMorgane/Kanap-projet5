@@ -3,6 +3,7 @@ const KanapAPI = "http://localhost:3000/api/products/";
 //recuperer le local storage
 
 let cart = getCart();
+//recup dans le dom
 let addArticle = document.querySelector('#cart__items');
 let totalQty = document.querySelector('#totalQuantity');
 let totalPrice = document.querySelector('#totalPrice');
@@ -54,11 +55,14 @@ function checkLs() {
                 console.log(b);
                 const newProduct = new articlePrice(b._id, b.price, product.Color, b.imageUrl, b.altTxt, b.description, product.Quantity);
                 console.log(newProduct);
-
                 console.log(product);
+            //stock ton panier
                 allArticlePrice.push(newProduct);
+                //visuel du produit dans le dom
                 articleChoice(newProduct);
+                //recalul le total
                 PrintTotal();
+                //appel fonction suppression produit
                 delectProduct();
             })
             .catch(function (err) {
@@ -250,7 +254,7 @@ let regexName = /^[a-zA-ZÂÀÈÉËÏÎéèëêïî'\s-][a-zA-ZÂÀÈÉËÏÎé�
 let regexAddress = /^[a-zA-ZÂÀÈÉËÏÎéèëêïî0-9][0-9a-zA-Zàéèëêïîôç'\s-]{5,100}$/;
 let regexCity = /^[a-zA-ZÂÀÈÉËÏÎéèëêïî][a-zA-Zàéèëêïîôç'\s-]{2,100}$/;
 let regexEmail = /^[a-zA-Z0-9._-]+[@]{1}[a-zA-Z0-9._-]+[.]{1}[a-z]{2,10}$/;
-
+//champs du formulaire
 validateField("firstName", "firstNameErrorMsg", regexName, " du prénom ");
 validateField("lastName", "lastNameErrorMsg", regexName, " du nom ");
 validateField("address", "addressErrorMsg", regexAddress, " de l'adresse ");
@@ -259,7 +263,9 @@ validateField("email", "emailErrorMsg", regexEmail, " de l'email ");
 
 // Fonction -> récupére les éléments du DOM / écoute l'évenement / appel les fonction suivante
 function validateField(id, errorMsgId, regexString, messageError) {
-    con0
+    const element = document.getElementById(id);
+    const errorElement = document.getElementById(errorMsgId);
+
     element.addEventListener("change", function () {
         validationForm(this, regexString, errorElement, messageError);
         if (validBox === false) {
@@ -270,7 +276,7 @@ function validateField(id, errorMsgId, regexString, messageError) {
     });
 
 }
-
+//test les regex et valider les regex
 // Fonction de validation de la saisie du formulaire / affiche un message d'erreur personnalisé
 function validationForm(currentComponent, regex, componentError, errorMsg) {
     let Regex = regex;
@@ -360,7 +366,7 @@ function send() {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ products, contact })
+        body: JSON.stringify({ products, contact })//reférence dans l'api dans le back-end / controllers product.js
     })
         .then(function (res) {
             if (res.ok) {
@@ -372,6 +378,7 @@ function send() {
             if (confirm('Vous allez être rediriger sur la page de confirmation')) {
 
                 console.log('redirection ok');
+                //insertion de l'id dans url
                 window.location.href = `confirmation.html?id=${x}`;
                 localStorage.clear();
 

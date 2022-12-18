@@ -1,13 +1,9 @@
 
-//recuperer l'id du produit concerné
-
 const KanapAPI = "http://localhost:3000/api/products/";
-
+//recuperer l'id du produit concerné
 let getID = window.location.search;
 let params = new URLSearchParams(document.location.search);
 let urlId = params.get("id");
-
-console.log(urlId);
 
 const productIMG = document.querySelector('.item__img');
 
@@ -43,6 +39,7 @@ function callProduct() {
 
 
             }
+            console.log(addColor);
         })
 
 };
